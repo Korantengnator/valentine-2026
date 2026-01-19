@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-pink-50 to-red-50 flex items-center justify-center p-4">
+    <div id="card" class="bg-white rounded-3xl shadow-2xl p-12 max-w-lg w-full text-center">
+        <!-- Heart-shaped image with berries -->
+        <div class="mb-8 flex justify-center">
+            <div class="relative w-48 h-48 bg-gradient-to-br from-pink-100 to-pink-200 rounded-full flex items-center justify-center">
+                <div class="text-6xl">🍓</div>
+            </div>
+        </div>
+
+        <!-- Main heading -->
+        <h1 class="text-5xl font-bold text-red-400 mb-6 leading-tight">
+            Beldy, will you be<br>my Valentine?
+        </h1>
+
+        <!-- Message -->
+        <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+            You brighten every day with your kindness, humor,
+            and beautiful smile. Spending time with you feels
+            like the best gift, and I'd love for us to celebrate this
+            special day together.
+        </p>
+
+        <!-- Buttons Container -->
+        <div id="buttonsContainer" class="flex gap-4 justify-center">
+            <button
+                id="yesBtn"
+                class="bg-red-500 hover:bg-red-600 text-white font-semibold text-xl px-16 py-4 rounded-full shadow-lg transition-all duration-200 hover:scale-105"
+            >
+                Yes!
+            </button>
+            <button
+                id="noBtn"
+                class="bg-white hover:bg-gray-50 text-gray-700 font-semibold text-xl px-16 py-4 rounded-full border-2 border-gray-300 shadow-lg transition-all duration-200 hover:scale-105"
+            >
+                No
+            </button>
+        </div>
+
+        <!-- Message Container (hidden initially) -->
+        <div id="messageContainer" class="mt-6 hidden">
+            <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6 animate-pulse">
+                <p id="responseMessage" class="text-red-600 text-xl font-semibold"></p>
+            </div>
+            <div id="heartIcon" class="mt-6 text-6xl animate-bounce hidden">
+                ❤️
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const card = document.getElementById('card');
+        const buttonsContainer = document.getElementById('buttonsContainer');
+        const messageContainer = document.getElementById('messageContainer');
+        const responseMessage = document.getElementById('responseMessage');
+        const heartIcon = document.getElementById('heartIcon');
+
+        yesBtn.addEventListener('click', function() {
+            // Hide buttons
+            buttonsContainer.classList.add('hidden');
+            
+            // Show success message
+            responseMessage.textContent = "You are now Nana Yaw's valentine, aren't you lucky";
+            messageContainer.classList.remove('hidden');
+            heartIcon.classList.remove('hidden');
+            
+            // Trigger confetti
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                
+                confetti({
+                    ...defaults,
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                });
+                confetti({
+                    ...defaults,
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                });
+            }, 250);
+        });
+
+        noBtn.addEventListener('click', function() {
+            // Show rejection message
+            responseMessage.textContent = "This is not an acceptable answer, try again.";
+            messageContainer.classList.remove('hidden');
+            heartIcon.classList.add('hidden');
+            
+            // Shake the card
+            card.classList.add('shake');
+            
+            // Remove shake and hide message after animation
+            setTimeout(() => {
+                card.classList.remove('shake');
+                messageContainer.classList.add('hidden');
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
